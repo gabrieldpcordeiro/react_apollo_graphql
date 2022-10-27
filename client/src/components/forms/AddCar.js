@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
-import { Button, Form, Input, InputNumber } from 'antd'
-import { v4 as uuidv4 } from 'uuid'
-import { ADD_CAR, GET_CARS, GET_PEOPLE } from '../../queries'
-import { Select } from 'antd';
-const { Option } = Select;
+import {useEffect, useState} from 'react'
+import {useMutation, useQuery} from '@apollo/client'
+import {Button, Form, Input, InputNumber} from 'antd'
+import {v4 as uuidv4} from 'uuid'
+import {ADD_CAR, GET_CARS, GET_PEOPLE} from '../../queries'
+import {Select} from 'antd';
 
-const AddPerson = () => {
+const {Option} = Select;
+
+const AddCar = () => {
     const [personId, setPersonId] = useState(null);
     const [id, setId] = useState(uuidv4())
     const [addCar] = useMutation(ADD_CAR)
-    const {  data } = useQuery(GET_PEOPLE);
-
+    const {data} = useQuery(GET_PEOPLE);
 
 
     const [form] = Form.useForm()
@@ -22,10 +22,12 @@ const AddPerson = () => {
     }, [])
 
     const onFinish = values => {
-        const { year,
+        const {
+            year,
             make,
             model,
-            price } = values
+            price
+        } = values
 
         addCar({
             variables: {
@@ -37,8 +39,8 @@ const AddPerson = () => {
                 personId: personId
 
             },
-            update: (cache, { data: addCar }) => {
-                const dataNew = cache.readQuery({ query: GET_CARS })
+            update: (cache, {data: addCar}) => {
+                const dataNew = cache.readQuery({query: GET_CARS})
                 console.log('data: ', dataNew.cars)
                 cache.writeQuery({
                     query: GET_CARS,
@@ -55,7 +57,6 @@ const AddPerson = () => {
     }
 
 
-
     return (
         <Form
             form={form}
@@ -63,26 +64,27 @@ const AddPerson = () => {
             layout='inline'
             onFinish={onFinish}
             size='large'
-            style={{ marginBottom: '40px', gap: '0.8em' }}
+            style={{marginBottom: '40px', gap: '0.8em'}}
         >
-            <Form.Item name="year" label="Year" rules={[{ required: true, message: "Please input the car's year!" }]}>
+            <Form.Item name="year" label="Year" rules={[{required: true, message: "Please input the car's year!"}]}>
                 <InputNumber min={1500}
-                    placeholder="Year"
+                             placeholder="Year"
                 />
             </Form.Item>
-            <Form.Item name="make" label="Make" rules={[{ required: true, message: "Please input the car's make!" }]}>
-                <Input width={20} placeholder="Make" />
+            <Form.Item name="make" label="Make" rules={[{required: true, message: "Please input the car's make!"}]}>
+                <Input width={20} placeholder="Make"/>
             </Form.Item>
-            <Form.Item name="model" label="Model" rules={[{ required: true, message: "Please input the car's model!" }]}>
-                <Input width={20} placeholder="Model" />
+            <Form.Item name="model" label="Model" rules={[{required: true, message: "Please input the car's model!"}]}>
+                <Input width={20} placeholder="Model"/>
             </Form.Item>
-            <Form.Item name="price" label="Price" rules={[{ required: true, message: "Please input the car's price!" }]}>
+            <Form.Item name="price" label="Price" rules={[{required: true, message: "Please input the car's price!"}]}>
                 <InputNumber min={0}
-                    formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+                             formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                             parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
                 />
             </Form.Item>
-            <Form.Item name="person" label="Person" rules={[{ required: true, message: "Please input the car's owner!" }]}>
+            <Form.Item name="person" label="Person"
+                       rules={[{required: true, message: "Please input the car's owner!"}]}>
                 <Select
                     showSearch
                     placeholder="Select a person"
@@ -101,7 +103,7 @@ const AddPerson = () => {
                         htmlType='submit'
                         disabled={
                             !form.isFieldsTouched(true) ||
-                            form.getFieldsError().filter(({ errors }) => errors.length).length
+                            form.getFieldsError().filter(({errors}) => errors.length).length
                         }
                     >
                         Add Car
@@ -112,4 +114,4 @@ const AddPerson = () => {
     )
 }
 
-export default AddPerson
+export default AddCar
